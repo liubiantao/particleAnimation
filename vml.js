@@ -6,7 +6,7 @@ var canvas = {},
 
 function Particles(c) {
   var a = this;
-  var b = "easeInOutElastic";
+  var b = "easeOutElastic";
   this.init = (function () {
     if (!c.canvasId || !document.getElementById(c.canvasId)) {
       console.log("pls use the correct canvas id");
@@ -163,15 +163,15 @@ Particles.prototype = {
     }
   }
 };
-var easeInOutElastic = function (g, e, k, j, f, i) {
+var easeOutElastic = function(g, e, k, j, f, i) {
   if (g == 0) {
     return e
   }
-  if ((g /= j / 2) == 2) {
+  if ((g /= j) == 1) {
     return e + k
   }
   if (!i) {
-    i = j * (0.3 * 1.5)
+    i = j * 0.3
   }
   if (!f || f < Math.abs(k)) {
     f = k;
@@ -179,8 +179,5 @@ var easeInOutElastic = function (g, e, k, j, f, i) {
   } else {
     var h = i / (2 * Math.PI) * Math.asin(k / f)
   }
-  if (g < 1) {
-    return -0.5 * (f * Math.pow(2, 10 * (g -= 1)) * Math.sin((g * j - h) * (2 * Math.PI) / i)) + e
-  }
-  return f * Math.pow(2, -10 * (g -= 1)) * Math.sin((g * j - h) * (2 * Math.PI) / i) * 0.5 + k + e
+  return ( f * Math.pow(2, -10 * g) * Math.sin((g * j - h) * (2 * Math.PI) / i) + k + e)
 };
