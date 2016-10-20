@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no">
+    <title>vml test</title>
+    <style type="text/css">
+        body {
+            background-color: white;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="1000" height="700">canvas</canvas>
+
+    <script type="text/javascript">
+        (function() {
+            var canvas = {},
+                image = {};
+            var particles = [];
+
+            canvas.obj = document.getElementById('myCanvas');
+
+            if (canvas.obj.getContext) {
+
+                canvas.ctx = canvas.obj.getContext('2d');
+
+                canvas.w = canvas.obj.width = document.body.clientWidth;
+                canvas.h = canvas.obj.height = document.body.clientHeight;
+
+                var img = new Image();
+
+                img.onload = function() {
+                    image.obj = img;
+                    image.w = img.width;
+                    image.h = img.height;
+                    image.x = parseInt(canvas.w / 2 - image.w / 2);
+                    image.y = 200;
+
+                    canvas.ctx.drawImage(image.obj, image.x, image.y, image.w, image.h);
+
+                    image.imageData = canvas.ctx.getImageData(image.x, image.y, image.w, image.h);
+
+                    calculate();
+
+                    requestAnimationFrame(draw);
+                };
+
+                img.src = 'vml1.png';
+            }
+
+
+            function calculate() {
+                var len = image.imageData.length;
+                var cols = 300,
+                    rows = 150;
+                var s_width = parseInt(image.w / cols),
+                    s_height = parseInt(image.h / rows);
+                var pos = 0;
+                var par_x, par_y;
+                var data = image.imageData.data;
+                var now = new Date().getTime();
+                for (var i = 0; i < cols; i++) {
+                    for (var j = 0; j < rows; j++) {
+                        pos = (j * s_height * image.w + i * s_width) * 4;
+                        if (data[pos + 3] > 100) {
+                            var particle = {
+                                x: image.x + i * s_width + (Math.random() - 0.5) * 20,
+                                y: image.y + j * s_height + (Math.random() - 0.5) * 20,
+                                flotage: false
+                            }
+
+                            if (i % 5 == 0 && j % 5 == 0) {
+                                particle.flotage = true;
+                                particle.startX = particle.x;
+                                particle.startY = particle.y;
+                                particle.startTime = now + Math.random() * 20 * 1000;
+                                particle.killTime = now + Math.random() * 35 * 1000;
+                                particle.speedX = (Math.random() - 0.5) * 0.9;
+                                particle.speedY = (Math.random() - 0.5) * 0.9;
+                            }
+
+                            particles.push(particle);
+                        }
+                    }
+                }
+            }
+
+            function draw() {
+                canvas.ctx.clearRect(0, 0, canvas.w, canvas.h);
+
+                var len = particles.length;
+
+                var curr_particle = null;
+                var time = new Date().getTime();
+                for (var i = 0; i < len; i++) {
+
+                    curr_particle = particles[i];
+                    if (curr_particle.flotage && curr_particle.startTime < time) {
+                        curr_particle.x += curr_particle.speedX;
+                        curr_particle.y += curr_particle.speedY;
+                    }
+                    if (curr_particle.killTime < time) {
+                        curr_particle.x = curr_particle.startX;
+                        curr_particle.y = curr_particle.startY;
+                        curr_particle.startTime = time + parseInt(Math.random() * 20) * 1000;
+                        curr_particle.killTime = time + parseInt(Math.random() * 35) * 1000;
+                    }
+                    canvas.ctx.fillStyle = "rgba(26,145,211,1)";
+                    canvas.ctx.fillRect(curr_particle.x, curr_particle.y, 1, 1);
+                }
+
+                requestAnimationFrame(draw);
+            }
+        }())
+    </script>
+
+</body>
+
+</html>
