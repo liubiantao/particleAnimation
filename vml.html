@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,shrink-to-fit=no">
+    <title>vml test</title>
+    <style type="text/css">
+        body {
+            background-color: white;
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+
+    <script type="text/javascript" src="vml.js"></script>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="10000" height="700">canvas</canvas>
+
+    <script type="text/javascript">
+        var particles = new Particles({
+            canvasId: 'myCanvas',
+            imgUrl: 'vml1.png',
+            cols: 300,
+            rows: 150,
+            startX: 250,
+            startY: 100,
+            imgX: 200,
+            imgY: 130,
+            delay: 100,
+            duration: 3000,
+            interval: 1,
+            particleOffset: 2,
+            ease: 'easeInOutExpo'
+        });
+        particles.animate();
+    </script>
+
+</body>
+</html>
